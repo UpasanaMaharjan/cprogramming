@@ -1,0 +1,920 @@
+llow the steps below and check if it helps you with the Setup.
+
+Right click on the start button.
+Choose the Command Prompt (Admin).
+If prompted by User Account Control, click
+An elevated Command Prompt window appears on your screen.
+Type the following command which will scan the virtualization support of your network interface, “netsh wlan show drivers”
+Now, here, if you get a No message then you have to update your network adapter.
+And if the Hosted Network gives you a Yes message then it means that you can go ahead as the network interface assisted virtualization.
+Type the below-mentioned command to set up an ad hoc wireless internet connection, “netsh wlan set hostednetwork mode=allow ssid= key=”
+Now substitute the markup tags with your desired entries.
+In the place of “network name” provide your desired network name and instead of “pass key” provide your key which should not be less than 8 characters.
+Afters etting up the hosted network, you need to start it.
+And to do so, type the      following command “netshwlanstarthostednetwork”
+Now open  Windows 10 Control Panel.
+Choose Network and Sharing Center.
+On the left pane of Network and Sharing Center window, click the link Change Adapter Settings.
+This will open up Network Connections.
+Here, or the recently created Wi-Fi connection you need to turn on the Internet Connection Sharing.
+And  to do so right click on the internet connection device which is currently connected to the internet.
+Navigate to the Sharing
+Select the checkbox which asks you to
+Allow other network users to connect through this computer’s Internet connection.
+And  then use the drop down menu and select the recently created ad hoc
+You      can get the IP address of the recently created ad hoc connection by double clicking the TCP/IPv4 Properties under the Networking  Tab.
+Now you can connect any of your Wi-Fi able devices with your Windows 10
+Your reply is very important for us to ensure a proper resolution. Please get back to us with the above information in order to assist you accordingly.Basic programming questions
+
+1. Socket Questions
+
+1.1 Should I use ServerSocket or DatagramSocket in my
+applications?
+1.2 How do I get the IP address of a machine from its
+hostname?
+1.3 How do I perform a hostname lookup for an IP address?
+1.4 How can I find out who is accessing my server?
+1.5 How can I find out the current IP address for my
+machine?
+1.6 Why can't my applet connect via sockets, or bind to a
+local port?
+1.7 What are socket options, and why should I use them?
+1.8 When my client connects to my server, why does no data
+come out?
+1.9 What is the cause of a NoRouteToHost exception?
+
+2. HTTP Questions
+
+2.1 How do I display a particular web page from an applet?
+2.2 How do I display more than one page from an applet?
+2.3 How can I fetch files using HTTP?
+2.4 How do I use a proxy server for HTTP requests?
+2.5 What is a malformed URL, and why is it exceptional?
+2.6 How do I URL encode the parameters of a CGI script?
+2.7 Why is a security exception thrown when using java.net.URL or
+java.net.URLConnection from an applet?
+2.8 How do I prevent caching of HTTP requests?
+
+
+Advanced programming questions
+
+3. Advanced networking concepts
+
+3.1 How do I handle timeouts in my networking
+applications?
+3.2 How do I control the amount of time a socket will
+linger before resetting?
+3.3 What does the java.net.Socket.setTcpNoDelay method do,
+and what is Nagle's algorithm?
+3.4 How do I implement a (FTP/HTTP/Telnet/Finger/SMTP/POP
+/IMAP/..../) client/server?
+3.5 How do I implement PING in Java?
+3.6 How can I send/receive email from Java?
+
+4. Remote method invocation
+
+4.1 What is remote method invocation?
+4.2 When should I use remote method invocation?
+4.3 Why can't I access RMI from C++?
+4.4 Why won't my RMI implementation compile under JDK1.1?
+4.5 Why won't my RMI implementation run under Java 2?
+
+5. Common Object Request Broker Architecture
+
+5.1 What is CORBA?
+5.2 When should I use CORBA?
+5.3 What support does Java have for CORBA?
+5.4 How do I start the CORBA nameservice for Java 2?
+
+6. Servlets
+
+6.1 What are Java Servlets?
+6.2 What do I need to develop servlets?
+6.3 Where can I get more information on servlets?
+6.4 How does servlet performance compare to applets?
+6.5 How does servlet performance compare to CGI?
+6.6 Should I use single-threaded, or multi-threaded
+servlets?
+6.7 How do I send cookies from a servlet?
+6.8 How do I read browser cookies from a servlet?
+6.9 How do I make cookies expire after a set time period?
+6.10 Why aren't cookies stored by my servlets accessible
+to my CGI scripts or ASP pages?
+6.11 How can I void a cookie, and delete it from the
+browser?
+
+
+
+
+Basic programming questions
+
+1. Socket questions
+
+1.1 Should I use ServerSocket or DatagramSocket in my
+applications?
+
+DatagramSocket allows a server to accept UDP packets,
+whereas ServerSocket allows an application to accept TCP
+connections. It depends on the protocol you're trying to
+implement. If you're creating a new protocol, and the
+choice is up to you, here's a few tips :
+
+DatagramSockets communciate using UDP packets. These
+packets don't guarantee delivery - you'll need to handle
+missing packets in your client/server
+
+ServerSockets communicate using TCP connections. TCP
+guarantees delivery, so all you need to do is have your
+applications read and write using a socket's InputStream
+and OutputStream.
+
+1.2 How do I get the IP address of a machine from its hostname?
+
+The InetAddress class is able to resolve IP addresses for
+you. Obtain an instance of InetAddress for the machine,
+and call the getHostAddress() method, which returns a
+string in the xxx.xxx.xxx.xxx address form.
+
+InetAddress inet =
+InetAddress.getByName("www.davidreilly.com");
+System.out.println ("IP : " + inet.getHostAddress());
+
+1.3 How do I perform a hostname lookup for an IP address?
+
+The InetAddress class contains a method that can return the
+domain name of an IP address. You need to obtain an
+InetAddress class, and then call its getHostName() method.
+This will return the hostname for that IP address. Depending
+on the platform, a partial or a fully qualified hostname may
+be returned.
+
+InetAddress inet = InetAddress.getByName("209.204.220.121");
+System.out.println ("Host: " + inet.getHostName());
+
+1.4 How can I find out who is accessing my server?
+
+If you're using a DatagramSocket, every packet that you
+receive will contain the address and port from which it was
+sent.
+
+DatagramPacket packet = null;
+
+// Receive next packet
+myDatagramSocket.receive ( packet );
+
+// Print address + port
+System.out.println ("Packet from : " +
+packet.getAddress().getHostAddress() + ':' +
+packet.getPort());
+
+If you're using a ServerSocket, then every socket connection
+you accept will contain similar information. The Socket class
+has a getInetAddress() and getPort() method which will allow
+you to find the same information.
+
+Socket mySock = myServerSocket.accept();
+
+// Print address + port
+System.out.println ("Connection from : " +
+mySock.getInetAddress().getHostAddress() + ':' +
+mySock.getPort());
+
+1.5 How can I find out the current IP address for my machine?
+
+The InetAddress has a static method called getLocalHost() which
+will return the current address of the local machine. You can
+then use the getHostAddress() method to get the IP address.
+
+InetAddress local = InetAddress.getLocalHost();
+
+// Print address
+System.out.println ("Local IP : " + local.getHostAddress());
+
+1.6 Why can't my applet connect via sockets, or bind to a local
+port?
+
+Applets are subject to heavy security constraints when
+executing under the control of a browser. Applets are unable to
+access the local file-system, to bind to local ports, or to
+connect to a computer via sockets other than the computer from
+which the applet is loaded. While it may seem to be an annoyance
+for developers, there are many good reasons why such tight
+constraints are placed on applets. Applets could bind to well
+known ports, and service network clients without authorization
+or consent. Applets executing within firewalls could obtain
+privileged information, and then send it across the network.
+Applets could even be infected by viruses, such as the Java
+StrangeBrew strain. Applets might become infected without an
+applet author's knowledge and then send information back that
+might leave hosts vulnerable to attack.
+
+Signed applets may be allowed greater freedom by browsers than
+unsigned applets, which could be an option. In cases where an
+applet must be capable of network communication, HTTP can be
+used as a communication mechanism. An applet could communicate
+via java.net.URLConnection with a CGI script, or a Java servlet.
+This has an added advantage - applets that use the URLConnection
+will be able to communicate through a firewall.
+
+1.7 What are socket options, and why should I use them?
+
+Socket options give developers greater control over how sockets
+behave. Most socket behavior is controlled by the operating
+system, not Java itself, but as of JDK1.1, you can control
+several socket options, including SO_TIMEOUT, SO_LINGER,
+TCP_NODELAY, SO_RCVBUF and SO_SNDBUF.
+
+These are advanced options, and many programmers may want to
+ignore them. That's OK, but be aware of their existence for the
+future. You might like to specify a timeout for read operations,
+to control the amount of time a connection will linger for before
+a reset is sent, whether Nagle's algorithm is enabled/disabled, or
+the send and receive buffers for datagram sockets.
+
+1.8 When my client connects to my server, why does no data
+come out?
+
+This is a common problem, made more difficult by the fact that
+the fault may lie in either the client, or the server, or both.
+The first step is to try and isolate the cause of the problem,
+by checking whether the server is responding correctly.
+
+If you're writing a TCP service, then you can telnet to the port
+the server uses, and check to see if it is responding to data. If
+so, then the fault is more than likely in the client, and if not,
+you've found your problem. A debugger can be very helpful in
+tracking down the precise location of server errors. You could
+try jdb, which comes with JDK, or use an IDE's debugger like
+Visual J++ or Borland JBuilder.
+
+If your fault looks like it is in the client, then it can often
+be caused by buffered I/O. If you're using a buffered stream, or a
+writer (such as PrintWriter), you may need to manually flush the
+data. Otherwise, it will be queued up but not sent, causing both
+client and server to stall. The problem can even be intermittent,
+as the buffer will flush sometimes (when it becomes full) but not
+other times.
+
+1.9 What is the cause of a NoRouteToHost exception?
+
+Usually this means that there isn't an active Internet connection
+through which a socket connection may take place, or that there is
+a nasty little firewall in the way. Firewalls are the bane of
+users and developers alike - while useful for security, they make
+legitimate networking software harder to support.
+
+Your best option is to try using a SOCKS proxy, or to use a
+different protocol, like HTTP. If you still have firewall
+problems, you can manually specify a HTTP proxy server (see
+section 2.4)
+
+This is a common problem, made more difficult by the fact that
+the fault may lie in either the client, or the server, or both.
+The first step is to try and isolate the cause of the problem, by
+checking whether the server is responding correctly.
+
+2. HTTP Questions
+
+2.1 How do I display a particular web page from an applet?
+
+An applet can instruct a web browser to load a particular
+page, using the showDocument method of the
+java.applet.AppletContext class. If you want to display a
+web page, you first have to obtain a reference to the
+current applet context.
+
+The following code snippet shows you how this can be done.
+The show page method is capable of displaying any URL passed
+to it.
+
+import java.net.*;
+import java.awt.*;
+import java.applet.*;
+
+public class MyApplet extends Applet
+{
+// Your applet code goes here
+
+// Show me a page
+public void showPage ( String mypage )
+{
+URL myurl = null;
+
+// Create a URL object
+try
+{
+myurl = new URL ( mypage );
+}
+catch (MalformedURLException e)
+{
+// Invalid URL
+}
+
+// Show URL
+if (myurl != null)
+{
+getAppletContext().showDocument (myurl);
+}
+
+}
+}
+
+2.2 How do I display more than one page from an applet?
+
+The showDocument method of the AppletContext interface is
+overloaded - meaning that it can accept more than one
+parameter. It can accept a second parameter, which
+represents the name of the browser window that should
+display a page.
+
+For example,
+
+myAppletContext.showDocument (myurl, "frame1")
+
+will display the document in frame1. If there exists no
+window named frame1, then a brand new window will be
+created.
+
+2.3 How can I fetch files using HTTP?
+
+The easiest way to fetch files using HTTP is to use the
+java.net.URL class. The openStream() method will return an
+InputStream instance, from which the file contents can be
+read. For added control, you can use the openConnection()
+method, which will return a URLConnection object.
+
+Here's a brief example that demonstrates the use of the
+java.net.URL.openStream() method to return the contents of a
+URL specified as a command line parameter.
+
+import java.net.*;
+import java.io.*;
+
+public class URLDemo
+{
+public static void main(String args[])
+{
+try
+{
+// Check to see that a command parameter was entered
+if (args.length != 1)
+{
+// Print message, pause, then exit
+System.err.println ("Invalid command
+parameters");
+System.in.read();
+System.exit(0);
+}
+
+// Create an URL instance
+URL url = new URL(args[0]);
+
+// Get an input stream for reading
+InputStream in = url.openStream();
+
+// Create a buffered input stream for efficency
+BufferedInputStream bufIn = new
+BufferedInputStream(in);
+
+// Repeat until end of file
+for (;;)
+{
+int data = bufIn.read();
+
+// Check for EOF
+if (data == -1)
+break;
+else
+System.out.print ( (char) data);
+}
+}
+catch (MalformedURLException mue)
+{
+System.err.println ("Invalid URL");
+}
+catch (IOException ioe)
+{
+System.err.println ("I/O Error - " + ioe);
+}
+}
+}
+
+2.4 How do I use a proxy server for HTTP requests?
+
+When a Java applet under the control of a browser (such
+as Netscape or Internet Explorer) fetches content via a
+URLConnection, it will automatically and transparently
+use the proxy settings of the browser.
+
+If you're writing an application, however, you'll have
+to manually specify the proxy server settings. You can
+do this when running a Java application, or you can write
+code that will specify proxy settings automatically for
+the user (providing you allow the users to customize the
+settings to suit their proxy servers).
+
+To specify proxy settings when running an application,
+use the -D parameter :
+
+jre -DproxySet=true -DproxyHost=myhost
+-DproxyPort=myport MyApp
+
+Alternately, your application can maintain a configuration
+file, and specify proxy settings before using a
+URLConnection :
+
+// Modify system properties
+Properties sysProperties = System.getProperties();
+
+// Specify proxy settings
+sysProperties.put("proxyHost", "myhost");
+sysProperties.put("proxyPort", "myport");
+sysProperties.put("proxySet", "true");
+
+2.5 What is a malformed URL, and why is it exceptional?
+
+When you create an instance of the java.net.URL class, its
+constructor can throw a MalformedURLException. This occurs
+when the URL is invalid. When it is thrown, it isn't because
+the host machine is down, or the URL path points to a missing
+file; a malformed URL exception is thrown when the URL
+cannot be correctly parsed.
+
+Common mistakes include :-
+* leaving out a protocol (eg "www.microsoft.com" instead
+of "http://www.microsoft.com/")
+* specifying an invalid protocol (eg "www://netscape.com")
+* leaving out the ':' character (eg http//www.micrsoft.com/)
+
+MalformedURLException will not be thrown if :-
+* the host name is invalid (eg
+"www.microsoft-rules-the-world.com")
+* the path is invalid (eg
+"http://www.microsoft.com/company_secrets.htm")
+
+2.6 How do I URL encode the parameters of a CGI script?
+
+This is an important question, as many Java applications and
+applets interact with server side applications, servlets, and
+CGI scripts. Let's take a look at how URL encoding works first
+though.
+
+A URL can be used to invoke a server side application or
+script's GET method. The first part of the URL will be the name
+of the server side script, followed by a question mark '?'
+character. After that will come the name of each parameter,
+and '=' sign to separate name from value, and a '&' character
+to indicate the next parameter. Here's a fictitious example.
+
+http://www.yourwebhost.com/yourcgi.cgi?name=your%20name&emai
+l=email@e...
+
+We can't include spaces or other high/low ASCII values, so the
+space character has been substituted for %20 in this example.
+Java provides a URLEncoder class to do this for us - we need only
+construct the URL and pass it to the URLEncoder. Here's a quick
+code example to demonstrate.
+
+String encodedURL = "http://www.yourwebhost.com/yourcgi?name=" +
+// encode as value may have spaces or other characters
+URLEncoder.encode("david reilly" );
+
+System.out.println ("Encoded URL - " + encodedURL);
+
+2.7 Why is a security exception thrown when using java.net.URL
+or java.net.URLConnection from an applet?
+
+Web browsers impose security restrictions on applets, which
+prevent applets from establishing network connections to servers
+other than that from which they were loaded. Like socket
+connections, HTTP connections will cause security exceptions to
+be thrown. If you absolutely, positively, have to access other
+hosts (and replacing your applet with a Java servlet is
+impractical), consider using a digitally signed applet.
+
+2.8 How do I prevent caching of HTTP requests?
+
+By default, caching will be enabled. You must use a URLConnection,
+rather than the URL.openStream() method, and explicitly specify that
+you do not want to cache the requests. This is achieved by calling
+the URLConnection.setUseCaches(boolean) method with a value of
+false.
+
+
+Advanced programming questions
+
+
+3. Advanced networking concepts
+
+3.1 How do I handle timeouts in my networking applications?
+
+If your application is written for JDK1.1 or higher, you
+can use socket options to generate a timeout after a read
+operation blocks for a specified length of time. This is
+by far the easiest method of handling timeouts. A call to
+the java.net.Socket.setSoTimeout() method allows you to
+specify the maximum amount of time a Socket I/O operation
+will block before throwing an InterruptedIOException. This
+allows you to trap read timeouts, and handle them correctly.
+For an article on the subject, see
+http://www.javacoffeebreak.com/articles/network_timeouts/.
+
+If you're trying to handle connection timeouts, or if your
+application must support earlier versions of Java, then
+another option is the use of threads. Multi-threaded
+applications can wait for timeouts, and then perform some
+action (such as resetting a connection or notifying the
+user). However, you as a programmer should avoid writing
+complex multi-threaded code - particularly in your clients.
+There's usually an easy way to encapsulate the complexity
+of multi-threading, and provide a simple non-blocking I/O
+version. An article that demonstrates this technique for
+connect operations is available at
+http://www.javaworld.com/jw-09-1999/jw-09-timeout.html
+
+3.2 How do I control the amount of time a socket will
+linger before resetting?
+
+When a socket wishes to terminate a connection it can
+"linger", allowing unsent data to be transmitted, or it
+can "reset" which means that all unsent data will be lost.
+You can explicitly set a delay before a reset is sent,
+giving more time for data to be read, or you can specify a
+delay of zero, meaning a reset will be sent as soon as the
+java.net.Socket.close() method is invoked.
+
+The socket option SO_LINGER controls whether a connection
+will be aborted, and if so, the linger delay. Use the
+java.net.Socket.setSoLinger method, which accepts as
+parameters a boolean and an int. The boolean flag will
+activate/deactivate the SO_LINGER option, and the int will
+control the delay time.
+
+3.3 What does the java.net.Socket.setTcpNoDelay method do,
+and what is Nagle's algorithm?
+
+This method controls the socket option TCP_NODELAY, which
+allows applications to enable or disable Nagle's algorithm.
+Nagle's algorithm (described in RFC 896), conserves
+bandwidth by minimizing the number of segments that are
+sent. When applications wish to decrease network latency
+and increase performance, they can disable Nagle's algorithm.
+Data will be sent earlier, at the cost of an increase in
+bandwidth consumption.
+
+3.4 How do I implement a (FTP/HTTP/Telnet/Finger/SMTP/
+POP/IMAP/..../) client/server?
+
+Your first step towards creating such systems will be
+to read the relevant Request For Comments (RFCs) document.
+Not sure which one? There are specific search engines,
+such as http://www.rfc-editor.org/, that will allow you
+to search for the name of a protocol, and to then read
+relevant documents. These RFCs describe the protocol
+you wish to implement.
+
+3.5 How do I implement PING in Java?
+
+Java includes support for UDP and TCP sockets. PING
+requires support for the Internet Control Message Protocol
+(ICMP). Your only choice (at the moment), is to use native
+code, or to use java.lang.Runtime to execute an external
+ping application. You won't be able to develop a 100% Pure
+implementation.
+
+NB - A native implementation that uses the Java Native
+Interface (JNI) is available for PING, in both English and
+Spanish. For more details, see
+http://www.geocities.com/SiliconValley/Bit/5716/ping/
+
+
+3.6 How can I send/receive email from Java?
+
+You can choose to implement Simple Mail Transfer Protocol
+(SMTP), to send email, and either POP or IMAP to receive
+email. However, an easier alternative is to use the
+JavaMail API, which provides a set of classes for mail and
+messaging applications. Royalty-free implementations of the
+API are now available from Sun for SMTP, POP and IMAP - and
+many other mail systems are supported by third-parties. For
+more information, visit the official JavaMail page, at
+http://java.sun.com/products/javamail/
+
+
+4. Remote method invocation
+
+4.1 What is remote method invocation?
+
+Remote method invocation (RMI), is a mechanism for
+invoking an object's methods, even though the object is
+executing on a foreign Java Virtual Machine (JVM). RMI is
+similar to remote procedure calls (RPCs), but has an added
+advantage - method signatures can contain Java objects as
+well as primitive data types. Even objects that a foreign
+JVM has never encountered before can be used, so new tasks
+and methods can be passed across a network.
+
+4.2 When should I use remote method invocation?
+
+Here's a few rules of thumb :
+
+* When you wish to execute code on remote systems
+(distributed systems)
+* When you have a network that has machines capable of
+supporting JVMs on all machines you would wish to
+connect to RMI
+* When you don't want your RMI applications to be used
+from machines that don't support JVMs, or from
+applications written in C++/Ada/Cobol/Fortran/
+[insert non-java lang here]
+
+4.3 Why can't I access RMI from C++?
+
+Remote method invocation allows method signatures to
+contain Java objects, and C++ isn't capable of executing
+Java bytecode. If your RMI system only used primitive data
+types, you might be able to write a software bridge
+between the two - but this isn't direct remote method
+invocation. You'd be better off investigating CORBA.
+
+4.4 Why won't my RMI implementation compile under JDK1.1?
+
+Under JDK1.02, RMI implementations extend
+java.rmi.server.UnicastRemoteServer. This changed in JDK1.1 -
+you should now extend java.rmi.server.UnicastRemoteObject.
+
+4.5 Why won't my RMI implementation run under Java 2?
+
+If you're running the client or server with Java 2, then you'll
+need to specify a security policy file, to prevent
+SecurityExceptions being thrown. This policy file will allow
+your application to bind to a local port (if a service), and
+to connect to remote hosts (if a client).
+
+The following changes should be made when running the
+cilent/server :
+
+java -Djava.security.policy=java.policy yourserver
+
+You'll also need to create a policy file (if one does not
+already exist). Here's a sample policy file that will allow
+you to accept conections from ports higher than 1024, but
+connect to all ports as a client.
+
+grant {
+permission java.net.SocketPermission "*:1024-65535",
+"connect,accept,resolve";
+permission java.net.SocketPermission "*:1-1023",
+"connect,resolve";
+};
+
+5. Common Object Request Broker Architecture
+
+5.1 What is CORBA?
+
+CORBA stands for Common Object Request Broker Architecture.
+CORBA is a mechanism that allows applications to invoke
+object methods that will execute on remote systems. CORBA
+isn't limited to any single platform, or language. CORBA
+systems are written in C++, Ada, Java, and other
+languages. This makes it more interoperable than remote
+procedure calls and remote method invocation.
+
+5.2 When should I use CORBA?
+
+Here's a few rules of thumb :
+
+* When you wish to use services that are running on remote
+machines (distributed systems)
+* When you have a heterogeneous networking environment,
+containing systems that aren't capable of supporting
+JVMs because a port is not yet available
+* When you want your applications to be accessed by other
+systems written in C, C++, Ada, Cobol, and other
+languages (including Java)
+
+5.3 What support does Java have for CORBA?
+
+Third party class libraries allow you to write CORBA
+application clients and services in earlier versions of
+Java, but support for CORBA is also included with the
+newly released Java 2 Platform. Clients and services can be
+written (though an extra download of the idltojava tool
+is required).
+
+For more information on Java IDL, see the article
+"Java and CORBA - a smooth blend", available from :
+http://www.javacoffeebreak.com/articles/javaidl/javaidl.html
+
+5.4 How do I start the CORBA nameservice for Java 2?
+
+The nameservice can be started by running the tnameserv
+command, which should be located in your Java 2 binaries
+directory. Remember however that this service will run
+continuously, so you'll need to run it in a separate
+console window.
+
+6. Java Servlets
+
+6.1 What are servlets?
+
+Servlets are server-side Java applications, as opposed to
+client-side applets or standalone applications. While
+servlets are compatible with many different types of servers,
+typically they are used in web servers, as a replacement for
+CGI scripts or Active-Server Pages (ASP).
+
+Java servlets offer many advantages over other forms of
+server-side processing. Apart from the obvious (they are
+written in the Java programming language, a big plus after
+all), servlet based applications are far easier to write
+than CGI scripts. There's no need to write code for parsing
+HTTP request parameters, as this code is provided by the
+javax.servlet.http package. You have access to the entire
+Java API, with no networking restrictions (making servlets
+far more attractive than applets). There are also performance
+increases over CGI scripts, as servlets persist over time,
+and do not create a new process for every connection.
+
+6.2 What do I need to develop servlets?
+
+To develop servlets, you need a basic familiarity with Java
+I/O streams, HTML, and the HyperText-Transfer Protocol (HTTP).
+You'll also need to download the Java Servlet Development Kit
+(JSDK) which is freely available from Sun Microsystems. Finally,
+you'll need a web-server that supports servlets, or a servlet
+engine which augments your server's capability.
+
+6.3 Where can I get more information on servlets?
+
+Gamelan's TechFocus recently published a two-part introductory
+tutorial on servlets, which I can highly recommend. For more
+information see http://www.gamelan.com/journal/techworkshop/
+
+I also highly recommend the book, Developing Java Servlets, by
+James Goodwill. The publisher is Sams, and the ISBN is 0672316005
+For more information, see
+http://www.davidreilly.com/goto.cgi?isbn=0672316005
+
+
+6.4 How does servlet performance compare to applets?
+
+Client-side Java has been dogged by performance problems due to
+slow loading times, older JVMs without JIT compilation, and
+inefficient coding. Applets have gained a reputation of poor
+performance, which often gives Java itself a bad name.
+Server-side Java, however, doesn't suffer from the same
+performance problems. The speed of execution is much better, as
+the server administrator can install more recent JVMs (some of
+which are optimized for server-side processing). The load time
+is virtually instantaneous, as there is no network latency to
+contend with. You're also in a better position regarding
+security restrictions - servlets can establish network
+connections without the sandbox problems that plague
+unsigned applets.
+
+6.5 How does servlet performance compare to CGI?
+
+Servlet performance is often far superior to CGI. Rather than
+forking a new process for each request, a pool of threads can
+be used to execute servlet requests. Servlets persist across
+connections, so there's no need to perform initialization
+tasks repeatedly. This, when coupled with a fast JVM and
+servlet engine, can offer better performance than CGI.
+
+6.6 Should I use single-threaded, or multi-threaded
+servlets?
+
+By default, servlets are multi-threaded. If you specifically
+require a single-threaded servlet, you should implement the
+javax.servlet.SingleThreadModel interface. This guarantees
+that no two threads will be operating on the same instance
+of the servlet, but still allows concurrent execution of
+the servlet. The servlet engine will maintain a pool of
+available threads, and create new instances of the servlet
+as required. This can cause performance problems however,
+and should be used sparingly except on low-traffic servers.
+
+6.7 How do I send cookies from a servlet?
+
+HTTP is a stateless protocol, which makes tracking user actions
+difficult. One solution is to use a cookie, which is a small
+piece of data sent by a web browser every time it requests a page
+from a particular site. Servlets, and CGI scripts, can send cookies
+when a HTTP request is made - though as always, there is no
+guarantee the browser will accept it.
+
+Cookies are represented by the javax.servlet.http.Cookie class.
+Cookie has a single constructor, which takes two strings (a key and
+a value).
+
+// Create a new cookie
+Cookie cookie = new Cookie ("counter", "1");
+
+Adding a cookie to a browser is easy. Cookies are sent as part of a
+HTTPServletResponse, using the addCookie( Cookie ) method. You can
+call this method multiple times, but remember that most browsers
+impose a limit of ten cookies, and 4096 bytes of data per hostname.
+
+public void doGet (HttpServletRequest request,
+HttpServletResponse response)
+throws IOException
+{
+response.addCookie(new Cookie("cookie_name", "cookie_value"));
+}
+
+6.8 How do I read browser cookies from a servlet?
+
+Reading cookies from a servlet is quite easy. You can gain access
+to any cookies sent by the browser from the
+javax.servlet.http.HttpServletRequest passed to the servlet's
+doGet, doPost, etc methods. HttpServletResponse offers a method,
+Cookies[] getCookies() which returns an array of Cookie objects.
+However, if no cookies are available, this value may be null, so be
+sure to check before accessing any array elements.
+
+// Check for cookies
+Cookie[] cookie_jar = request.getCookies();
+
+// Check to see if any cookies exists
+if (cookie_jar != null)
+{
+for (int i =0; i< cookies.length; i++)
+{
+Cookie aCookie = cookie_jar[i];
+pout.println ("Name : " + aCookie.getName());
+pout.println ("Value: " + aCookie.getValue());
+}
+}
+
+6.9 How do I make cookies expire after a set time period?
+
+Depending on how you use the data stored in a cookie, it is
+sometimes a good idea to make the cookie expire. Since anyone
+using the browser will have the cookie sent on their behalf, it
+may appear to be a legitimate user when in actual fact it is not.
+This often happens in places like Internet cafes, school or
+university computing labs, or libraries. If your cookie sends
+a user identifier that facilitates access to sensitive data, or
+allows changes to be made (for example, a web-based email service),
+then you should expire cookies after a small time period. If the
+user keeps using your servlet, you always have the option of
+resending the cookie with a longer duration.
+
+To specify an expiration time, you can use the setMaxTime(int)
+method of javax.servlet.http.Cookie. It takes as a parameter the
+number of seconds before the cookie will expire. For example,
+for a five minute expiration, we would do the following :-
+
+// Create a new cookie for userID from a fictitious
+// method called getUserID
+Cookie cookie = new Cookie ("userID", getUserID());
+
+// Expire the cookie in five minutes (5 * 60)
+cookie.setMaxTime( 300 );
+
+When the cookie is sent back to the browser, using
+HttpServletResponse.addCookie(Cookie), it will only be returned
+by the browser until the expiration date occurs. If you'd
+prefer, you can also specify a negative value for setMaxTime(int),
+and the cookie will expire as soon as the browser exits. Note
+however that not everyone will shutdown their browser, and it
+might be available for minutes, hours even days. Finally,
+specifying a value of zero will expire the cookie instantly.
+
+6.10 Why aren't cookies stored by my servlets accessible to my
+CGI scripts or ASP pages?
+
+By default, cookies are accessible to every HTTP request for
+the current directory, and any subdirectories. Now on most web
+servers and servlet engines, servlets are located in a special
+directory. For example, when using servletrunner (which ships
+with the Java Servlet Development Kit), servlets must be invoked
+under the /servlet/ directory.
+
+eg http://webserver/servlet/servletname
+
+If you want your cookies to be accessible elsewhere, you must
+specify the root path of your webserver, using the
+javax.servlet.Cookie.setPath( String ) method.
+
+// Create a cookie for everyone to share
+Cookie myCookie = new Cookie ("counter", "1");
+
+// Set path for cookie
+myCookie.setPath( "/" );
+
+Once you've set the path, any script (for example, stored in
+/cgi-bin/) can access the cookies stored by your servlets.
+
+6.11 How can I void a cookie, and delete it from the browser?
+
+You can specify an expiration date, using the setMaxTime(int)
+method of javax.servlet.http.Cookie. Specifying a expiration
+time of zero will void the cookie, and delete it from the browser.
+
+// Expire the cookie immediately
+cookie.setMaxTime( 0 );
+
+// Send cookie back to the browser to void it
+response.addCookie(cookie);
